@@ -24,6 +24,10 @@ branches:
 # Job Lifecycle
 #   https://docs.travis-ci.com/user/job-lifecycle/
 
+branches:
+  except:
+    - appveyor
+
 before_install:
   # workaround for "buffer overflow detected" problem of openjdk:
   #     https://github.com/travis-ci/travis-ci/issues/5227
