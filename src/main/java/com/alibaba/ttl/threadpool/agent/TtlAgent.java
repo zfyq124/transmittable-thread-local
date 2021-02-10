@@ -227,10 +227,10 @@ public final class TtlAgent {
 
     private static String logTtlAgentConfig() {
         return "TTL Agent configurations:"
-            + "\n    " + TTL_AGENT_LOGGER_KEY + "=" + getLoggerType()
-            + "\n    " + TTL_AGENT_LOG_CLASS_TRANSFORM_KEY + "=" + isLogClassTransform()
-            + "\n    " + TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY + "=" + isDisableInheritableForThreadPool()
-            + "\n    " + TTL_AGENT_ENABLE_TIMER_TASK_KEY + "=" + isEnableTimerTask();
+                + "\n    " + TTL_AGENT_LOGGER_KEY + "=" + getLoggerType()
+                + "\n    " + TTL_AGENT_LOG_CLASS_TRANSFORM_KEY + "=" + isLogClassTransform()
+                + "\n    " + TTL_AGENT_DISABLE_INHERITABLE_FOR_THREAD_POOL_KEY + "=" + isDisableInheritableForThreadPool()
+                + "\n    " + TTL_AGENT_ENABLE_TIMER_TASK_KEY + "=" + isEnableTimerTask();
     }
 
     /**

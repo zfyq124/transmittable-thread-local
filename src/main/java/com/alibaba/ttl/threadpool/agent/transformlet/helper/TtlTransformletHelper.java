@@ -121,9 +121,9 @@ public final class TtlTransformletHelper {
         // rename original method, and set to private method(avoid reflect out renamed method unexpectedly)
         newMethod.setName(nameForOriginalMethod);
         newMethod.setModifiers(newMethod.getModifiers()
-            & ~Modifier.PUBLIC /* remove public */
-            & ~Modifier.PROTECTED /* remove protected */
-            | Modifier.PRIVATE /* add private */);
+                & ~Modifier.PUBLIC /* remove public */
+                & ~Modifier.PROTECTED /* remove protected */
+                | Modifier.PRIVATE /* add private */);
         clazz.addMethod(newMethod);
 
         final String returnOp;
@@ -134,12 +134,12 @@ public final class TtlTransformletHelper {
         }
         // set new method implementation
         final String code = "{\n" +
-            beforeCode + "\n" +
-            "try {\n" +
-            "    " + returnOp + nameForOriginalMethod + "($$);\n" +
-            "} finally {\n" +
-            "    " + finallyCode + "\n" +
-            "} }";
+                beforeCode + "\n" +
+                "try {\n" +
+                "    " + returnOp + nameForOriginalMethod + "($$);\n" +
+                "} finally {\n" +
+                "    " + finallyCode + "\n" +
+                "} }";
         method.setBody(code);
 
         return code;
