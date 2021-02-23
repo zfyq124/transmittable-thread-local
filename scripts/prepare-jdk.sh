@@ -17,9 +17,12 @@ __loadSdkman() {
         curl -s get.sdkman.io | bash || die "fail to install sdkman"
         {
             echo sdkman_auto_answer=true
+            echo sdkman_disable_auto_upgrade_check=false
+
+            # sdkman reports offline mode (which is not)
+            #   https://github.com/sdkman/sdkman-cli/issues/397
             echo sdkman_curl_connect_timeout=30
             echo sdkman_curl_max_time=50
-            echo sdkman_disable_auto_upgrade_check=false
         } >>"$HOME/.sdkman/etc/config"
     fi
 

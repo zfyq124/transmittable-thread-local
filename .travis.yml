@@ -21,39 +21,35 @@ language: java
 # Job Lifecycle
 #   https://docs.travis-ci.com/user/job-lifecycle/
 
+os: linux
+dist: trusty
+
+addons:
+  apt:
+    packages:
+      - openjdk-6-jdk
+  homebrew:
+    packages:
+    - coreutils
+    - gnu-sed
+
 jobs:
   include:
     - name: ttl core lib test under linux
-      os: linux
-      dist: trusty
-      addons:
-        apt:
-          packages:
-            - openjdk-6-jdk
       script:
         - scripts/integration-test.sh
       after_success:
-        # codecov
         - ./scripts/codecov.sh
     - name: ttl core lib test under osx
       os: osx
       osx_image: xcode11.3
       install:
-        - HOMEBREW_NO_AUTO_UPDATE=1 brew install coreutils
-        - HOMEBREW_NO_AUTO_UPDATE=1 brew install gnu-sed
-        - export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+        - export PATH=/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin:$PATH
       script:
         - scripts/integration-test.sh
       after_success:
-        # codecov
         - ./scripts/codecov.sh
     - name: ttl extension libs test under linux
-      os: linux
-      dist: trusty
-      addons:
-        apt:
-          packages:
-            - openjdk-6-jdk
       script:
         - ttl-integrations/sample-ttl-agent-extension-transformlet/scripts/integration-test.sh
 
