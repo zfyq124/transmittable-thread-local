@@ -10,33 +10,56 @@ language: java
 # - Customizing the Build / Build Matrix
 #   https://docs.travis-ci.com/user/customizing-the-build/#Build-Matrix
 
-dist: trusty
 
-addons:
-  apt:
-    packages:
-      - openjdk-6-jdk
-
-branches:
-  except:
-    - appveyor
+# The Ubuntu Linux Build Environments
+#   https://docs.travis-ci.com/user/reference/linux/
+# The macOS Build Environment
+#   https://docs.travis-ci.com/user/reference/osx/
+# Installing Dependencies
+#   https://docs.travis-ci.com/user/installing-dependencies/#installing-packages-on-macos
 
 # Job Lifecycle
 #   https://docs.travis-ci.com/user/job-lifecycle/
 
-before_install:
-  # output env info
-  - ls -la
-  - ls -l /usr/lib/jvm && ls /usr/lib/jvm/*
-  - echo -e "JAVA_HOME=$JAVA_HOME\nPATH=$PATH\nSHELL=$SHELL"
+jobs:
+  include:
+    - name: ttl core lib test under linux
+      os: linux
+      dist: trusty
+      addons:
+        apt:
+          packages:
+            - openjdk-6-jdk
+      script:
+        - scripts/integration-test.sh
+      after_success:
+        # codecov
+        - ./scripts/codecov.sh
+    - name: ttl core lib test under osx
+      os: osx
+      osx_image: xcode11.3
+      install:
+        - HOMEBREW_NO_AUTO_UPDATE=1 brew install coreutils
+        - HOMEBREW_NO_AUTO_UPDATE=1 brew install gnu-sed
+        - export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
+      script:
+        - scripts/integration-test.sh
+      after_success:
+        # codecov
+        - ./scripts/codecov.sh
+    - name: ttl extension libs test under linux
+      os: linux
+      dist: trusty
+      addons:
+        apt:
+          packages:
+            - openjdk-6-jdk
+      script:
+        - ttl-integrations/sample-ttl-agent-extension-transformlet/scripts/integration-test.sh
 
-script:
-  - scripts/integration-test.sh
-  - ttl-integrations/sample-ttl-agent-extension-transformlet/scripts/integration-test.sh
-
-after_success:
-  # codecov
-  - ./scripts/codecov.sh
+branches:
+  except:
+    - appveyor
 
 after_script:
   - git status --ignored

@@ -10,21 +10,23 @@ __source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836="$(dirname "$(readlink -f "$
 source "$__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836/common.sh"
 
 __loadSdkman() {
-    local this_time_install_sdk_man=false
     # install sdkman
     if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
         [ -d "$HOME/.sdkman" ] && rm -rf "$HOME/.sdkman"
 
         curl -s get.sdkman.io | bash || die "fail to install sdkman"
-        echo sdkman_auto_answer=true >>"$HOME/.sdkman/etc/config"
-
-        this_time_install_sdk_man=true
+        {
+            echo sdkman_auto_answer=true
+            echo sdkman_curl_connect_timeout=30
+            echo sdkman_curl_max_time=50
+            echo sdkman_disable_auto_upgrade_check=false
+        } >>"$HOME/.sdkman/etc/config"
     fi
 
     set +u
     # shellcheck disable=SC1090
     source "$HOME/.sdkman/bin/sdkman-init.sh"
-    "$this_time_install_sdk_man" && logAndRun sdk ls java
+    logAndRun sdk ls java
     set -u
 }
 __loadSdkman
@@ -49,9 +51,20 @@ java_home_var_names=()
 __setJdkHomeVarsAndInstallJdk() {
     blueEcho "prepared jdks:"
 
-    JDK6_HOME="${JDK6_HOME:-/usr/lib/jvm/java-6-openjdk-amd64}"
-    java_home_var_names=(JDK6_HOME)
-    printf '%s :\n\t%s\n' "JDK6_HOME" "${JDK6_HOME}"
+    if [ -n "${JDK6_HOME:-}" ]; then
+        java_home_var_names=(JDK6_HOME)
+        printf '%s :\n\t%s\n' "JDK6_HOME" "${JDK6_HOME}"
+    else
+        if [ -d /usr/lib/jvm/java-6-openjdk-amd64 ]; then
+            JDK6_HOME=/usr/lib/jvm/java-6-openjdk-amd64
+            java_home_var_names=(JDK6_HOME)
+            printf '%s :\n\t%s\n' "JDK6_HOME" "${JDK6_HOME}"
+        elif [ -d /Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home ]; then
+            JDK6_HOME=/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+            java_home_var_names=(JDK6_HOME)
+            printf '%s :\n\t%s\n' "JDK6_HOME" "${JDK6_HOME}"
+        fi
+    fi
 
     local jdkNameOfSdkman
     for jdkNameOfSdkman in "${jdks_install_by_sdkman[@]}"; do
