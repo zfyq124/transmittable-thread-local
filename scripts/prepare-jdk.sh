@@ -10,6 +10,7 @@ __source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836="$(dirname "$(readlink -f "$
 source "$__source_guard_37F50E39_A075_4E05_A3A0_8939EF62D836/common.sh"
 
 __loadSdkman() {
+    local this_time_install_sdk_man=false
     # install sdkman
     if [ ! -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
         [ -d "$HOME/.sdkman" ] && rm -rf "$HOME/.sdkman"
@@ -24,12 +25,14 @@ __loadSdkman() {
             echo sdkman_curl_connect_timeout=30
             echo sdkman_curl_max_time=50
         } >>"$HOME/.sdkman/etc/config"
+
+        this_time_install_sdk_man=true
     fi
 
     set +u
     # shellcheck disable=SC1090
     source "$HOME/.sdkman/bin/sdkman-init.sh"
-    logAndRun sdk ls java
+    "$this_time_install_sdk_man" && logAndRun sdk ls java
     set -u
 }
 __loadSdkman
@@ -37,18 +40,18 @@ __loadSdkman
 jdks_install_by_sdkman=(
     7.0.282-zulu
     8.0.282-zulu
-
     9.0.7-zulu
     10.0.2-zulu
     11.0.10-zulu
-
     12.0.2-open
     13.0.5-zulu
     14.0.2-zulu
     15.0.2-zulu
     16.ea.34-open
     17.ea.8-open
+
 )
+
 java_home_var_names=()
 
 __setJdkHomeVarsAndInstallJdk() {
