@@ -32,14 +32,9 @@ __loadSdkman
 jdks_install_by_sdkman=(
     7.0.302-zulu
     8.0.292-zulu
-
-    9.0.7-zulu
-    10.0.2-zulu
+    # jdk 9, 10 is eol, sdkman not supported!
     11.0.11-zulu
-
-    12.0.2-open
-    13.0.5-zulu
-    14.0.2-zulu
+    # jdk 12, 13, 14 is eol, sdkman not supported!
     15.0.2-zulu
     16.0.1-open
     17.ea.18-open
