@@ -227,7 +227,8 @@ public class TransmittableThreadLocal<T> extends InheritableThreadLocal<T> imple
     }
 
     private static void doExecuteCallback(boolean isBefore) {
-        for (TransmittableThreadLocal<Object> threadLocal : holder.get().keySet()) {
+        WeakHashMap<TransmittableThreadLocal<Object>, ?> h = new WeakHashMap<TransmittableThreadLocal<Object>, Object>(holder.get());
+        for (TransmittableThreadLocal<Object> threadLocal : h.keySet()) {
             try {
                 if (isBefore) threadLocal.beforeExecute();
                 else threadLocal.afterExecute();
